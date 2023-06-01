@@ -100,8 +100,6 @@ const createQuestion = async (req, res) => {
 const getQuestions = async (req, res) => {
   try {
     const questions = await Question.find({});
-
-
     const result = await getQuestionImage(questions);
     // console.log(result);
 

@@ -12,7 +12,7 @@ const upload = multer({ storage: storage });
 
 // console.log(upload);
 
-router.get('/get-all-question', getQuestions);
+router.get('/get-all-questions', getQuestions);
 
 router.post('/file', upload.single('file'), uploadImg);
 
