@@ -1,5 +1,5 @@
 const Test = require('../models/customTestModel');
-const Question = require('../models/questionModel');
+
 const { saveTestImages, getTestImages } = require('../fileUpload/awsS3');
 
 const createTest = async (req, res) => {
@@ -89,14 +89,8 @@ const getTestById = async (req, res) => {
     if (!test) {
       return res.status(404).json({ error: 'Test not found' });
     }
-    const questionsArray = test.questionsId;
-    const questions = await Question.find({ _id: { $in: questionsArray } });
 
     const newTest = await getTestImages(test);
-
-    if (questions.length > 0) {
-      newTest.questions = questions;
-    }
 
     res.json(newTest);
   } catch (err) {
