@@ -1,5 +1,6 @@
 const Test = require('../models/customTestModel');
-const { saveTestImages } = require('../fileUpload/awsS3');
+const { saveTestImages, getTestImages } = require('../fileUpload/awsS3');
+
 const createTest = async (req, res) => {
   const testData = req.body;
   console.log(testData);
@@ -70,4 +71,30 @@ const createTest = async (req, res) => {
   }
 };
 
-module.exports = { createTest };
+const getAllTest = async (req, res) => {
+  try {
+    const tests = await Test.find({}, '_id testName category');
+    res.status(200).json(tests);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+};
+
+const getTestById = async (req, res) => {
+  const testId = req.params.id;
+  try {
+    const test = await Test.findById(testId);
+    if (!test) {
+      return res.status(404).json({ error: 'Test not found' });
+    }
+    const newTest = await getTestImages(test);
+    console.log(newTest);
+    res.json(newTest);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+};
+
+module.exports = { createTest, getAllTest, getTestById };

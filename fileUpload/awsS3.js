@@ -148,9 +148,30 @@ async function getQuestionImage(questions) {
   return newQuestionObject;
 }
 
+async function getTestImages(test) {
+  await Promise.all(
+    test.explanation.map(async (item) => {
+      if (item.type === 'image') {
+        let url = await getSignedUrl(
+          s3Client,
+          new GetObjectCommand({
+            Bucket: bucketName,
+            Key: item.image,
+          }),
+          { expiresIn: 604800 } // 1 week
+        );
+        item.image = url;
+      }
+    })
+  );
+
+  return test;
+}
+
 module.exports = {
   saveSingleImage,
   getQuestionImage,
   saveQuestionImages,
   saveTestImages,
+  getTestImages,
 };
