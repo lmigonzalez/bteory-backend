@@ -80,6 +80,34 @@ async function saveQuestionImages(files) {
   return filesArray;
 }
 
+async function saveTestImages(files) {
+  const filesArray = [];
+  for (let file of files) {
+    const fileBuffer = await sharp(file.buffer)
+      .resize({
+        height: 500,
+        width: 500,
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255 },
+      })
+      .toBuffer();
+
+    const fileName = generateFileName();
+    const uploadParams = {
+      Bucket: bucketName,
+      Body: fileBuffer,
+      Key: fileName,
+      ContentType: file.mimetype,
+    };
+
+    await s3Client.send(new PutObjectCommand(uploadParams));
+
+    filesArray.push(fileName);
+  }
+
+  return filesArray;
+}
+
 async function getQuestionImage(questions) {
   const newQuestionObject = await Promise.all(
     questions.map(async (question) => {
@@ -95,13 +123,10 @@ async function getQuestionImage(questions) {
         question.questionImg = url; // Replace the value with the URL
       }
 
-
-
-	  
       await Promise.all(
-		  question.explanation.map(async (explanation) => {
-			  if (explanation.type === 'image') {
-			//   console.log(explanation)
+        question.explanation.map(async (explanation) => {
+          if (explanation.type === 'image') {
+            //   console.log(explanation)
             let imageUrl = await getSignedUrl(
               s3Client,
               new GetObjectCommand({
@@ -123,4 +148,9 @@ async function getQuestionImage(questions) {
   return newQuestionObject;
 }
 
-module.exports = { saveSingleImage, getQuestionImage, saveQuestionImages };
+module.exports = {
+  saveSingleImage,
+  getQuestionImage,
+  saveQuestionImages,
+  saveTestImages,
+};

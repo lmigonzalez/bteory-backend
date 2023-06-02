@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 
-const explanationSchema = new mongoose.Schema({
-  type: { type: String, enum: ['text', 'image'], required: true },
-  content: { type: String, required: true },
-});
 
 const customTestSchema = new mongoose.Schema({
-  customTestName: { type: String, required: true },
+  testName: { type: String, required: true },
   questionsId: { type: [String], required: true },
-  explanation: { type: [explanationSchema] },
+  explanation: { type: [Object] },
   category: {
     type: String,
     enum: ['practice', 'general', 'final'],
@@ -22,4 +18,4 @@ const customTestSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('customTest', customTestSchema);
+module.exports = mongoose.model('tests', customTestSchema);
