@@ -5,6 +5,7 @@ const {
   createTest,
   getAllTest,
   getTestById,
+  deleteTestById,
 } = require('../controllers/testController');
 
 const storage = multer.memoryStorage();
@@ -15,5 +16,7 @@ router.get('/get-all-test', getAllTest);
 router.get('/get-test/:id', getTestById);
 
 router.post('/create-test', upload.array('files', 5), createTest);
+
+router.delete('/delete/test/:id', deleteTestById);
 
 module.exports = router;

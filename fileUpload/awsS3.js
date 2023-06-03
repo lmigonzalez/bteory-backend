@@ -168,10 +168,29 @@ async function getTestImages(test) {
   return test;
 }
 
+async function deleteTestExplanationImages(explanation) {
+  const deletedImages = explanation.map(async (image) => {
+    if (image.type === 'image') {
+      const deleteParams = {
+        Bucket: bucketName,
+        Key: image.image,
+      };
+      const result = await s3Client.send(new DeleteObjectCommand(deleteParams));
+
+      return result;
+    }
+  });
+
+  const result = await Promise.all(deletedImages);
+
+  return result;
+}
+
 module.exports = {
   saveSingleImage,
   getQuestionImage,
   saveQuestionImages,
   saveTestImages,
   getTestImages,
+  deleteTestExplanationImages,
 };

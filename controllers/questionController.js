@@ -11,7 +11,7 @@ const uploadImg = async (req, res) => {
 
   try {
     const fileName = await saveSingleImage(file);
-    console.log(fileName);
+
     res.status(201).json(fileName);
   } catch (err) {
     res.status(400).json({ message: err });
@@ -32,15 +32,13 @@ const createQuestion = async (req, res) => {
       const filesArray = await saveQuestionImages(files);
       fileData = filesArray;
     }
-    // console.log(fileData);
+
     const explanationKeys = Object.keys(req.body)
       .filter((key) => key.startsWith('explanation'))
       .map((key) => {
         const order = parseInt(key.split('-')[1]);
         return { explanation: req.body[key], order };
       });
-
-    // console.log(explanationKeys);
 
     const mergedArray = [];
     let currentIndex = 0;
@@ -74,8 +72,6 @@ const createQuestion = async (req, res) => {
       currentIndex++;
     }
 
-    console.log(mergedArray);
-
     const newQuestion = new Question({
       question,
       questionImg: fileData[0],
@@ -88,7 +84,6 @@ const createQuestion = async (req, res) => {
     });
 
     const result = await newQuestion.save();
-    console.log(result);
 
     res.status(201).json(result);
   } catch (err) {
@@ -101,7 +96,6 @@ const getQuestions = async (req, res) => {
   try {
     const questions = await Question.find({});
     const result = await getQuestionImage(questions);
-    // console.log(result);
 
     res.status(200).json(result);
   } catch (err) {

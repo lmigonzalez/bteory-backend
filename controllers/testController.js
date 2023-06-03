@@ -1,6 +1,10 @@
 const Test = require('../models/customTestModel');
 
-const { saveTestImages, getTestImages } = require('../fileUpload/awsS3');
+const {
+  saveTestImages,
+  getTestImages,
+  deleteTestExplanationImages,
+} = require('../fileUpload/awsS3');
 
 const createTest = async (req, res) => {
   const testData = req.body;
@@ -99,4 +103,19 @@ const getTestById = async (req, res) => {
   }
 };
 
-module.exports = { createTest, getAllTest, getTestById };
+const deleteTestById = async (req, res) => {
+  const testId = req.params.id;
+
+  try {
+    const response = await Test.findByIdAndDelete({ _id: testId });
+    const result = await deleteTestExplanationImages(response.explanation);
+
+    console.log(result);
+    res.status(200).json('deleted');
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+};
+
+module.exports = { createTest, getAllTest, getTestById, deleteTestById };
