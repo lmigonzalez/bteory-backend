@@ -30,9 +30,9 @@ const createTestResult = async (req, res) => {
     });
 
     await newTestResult.save();
-    console.log(newTestResult);
+    // console.log(newTestResult);
 
-    res.status(200).json(newTestResult);
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err);
     console.log(err);
