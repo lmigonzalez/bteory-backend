@@ -9,29 +9,26 @@ const createTestResult = async (req, res) => {
   try {
     const test = await Test.findById(testId);
     const testQuestionIdArray = test.questionsId;
+
     const foundQuestions = await Questions.find({
       _id: { $in: testQuestionIdArray },
     });
 
-    const result = foundQuestions.map((question, index) => {
-      // question right answer
-      const questionId = question._id.toString();
-      const questionAnswer = sanitizeAnswer(question.answer);
-
-      // user answer
-      // this will find by the question id the answer given by the user
-      // the array containing the user answer is not necesary ordered
-      const foundUserAnswer = answers.find(
-        (item) => item.split("-")[0] === questionId
-      );
-
+    const result = answers.map((answer) => {
       // this splits the serialized answer 'cause the answer is comming in this way questionId-answer
-      const { selectedAnswer } = answerInterprete(foundUserAnswer);
+      const { questionId, selectedAnswer } = answerInterprete(answer);
       const userAnswer = sanitizeAnswer(selectedAnswer);
 
-      const isCorrect = compareAnswers(questionAnswer, userAnswer);
+      // find the cuestion
+      const question = foundQuestions.find((item) => {
+        return item._id.toString() === questionId;
+      });
+      const rightAnswer = question.answer;
 
-      return { questionId, questionAnswer, userAnswer, isCorrect };
+      // compare the answers
+      const isCorrect = compareAnswers(rightAnswer, userAnswer);
+
+      return { questionId, rightAnswer, userAnswer, isCorrect };
     });
 
     const newTestResult = new TestResult({
