@@ -1,10 +1,10 @@
-const TestResult = require('../models/testResultModel');
-const Test = require('../models/customTestModel');
-const Questions = require('../models/questionModel');
+const TestResult = require("../models/testResultModel");
+const Test = require("../models/customTestModel");
+const Questions = require("../models/questionModel");
 
 const createTestResult = async (req, res) => {
   const { testId, answers } = req.body;
-  const userId = '1234567890';
+  const userId = "1234567890";
 
   try {
     const test = await Test.findById(testId);
@@ -14,10 +14,23 @@ const createTestResult = async (req, res) => {
     });
 
     const result = foundQuestions.map((question, index) => {
+      // question right answer
       const questionId = question._id.toString();
       const questionAnswer = sanitizeAnswer(question.answer);
-      const userAnswer = sanitizeAnswer(answers[index]);
+
+      // user answer
+      // this will find by the question id the answer given by the user
+      // the array containing the user answer is not necesary ordered
+      const foundUserAnswer = answers.find(
+        (item) => item.split("-")[0] === questionId
+      );
+
+      // this splits the serialized answer 'cause the answer is comming in this way questionId-answer
+      const { selectedAnswer } = answerInterprete(foundUserAnswer);
+      const userAnswer = sanitizeAnswer(selectedAnswer);
+
       const isCorrect = compareAnswers(questionAnswer, userAnswer);
+
       return { questionId, questionAnswer, userAnswer, isCorrect };
     });
 
@@ -41,11 +54,16 @@ const createTestResult = async (req, res) => {
 const sanitizeAnswer = (answer) => {
   let sanitizedAnswer = answer.trim();
 
-  if (sanitizedAnswer.endsWith('.')) {
+  if (sanitizedAnswer.endsWith(".")) {
     sanitizedAnswer = sanitizedAnswer.slice(0, -1);
   }
 
   return sanitizedAnswer;
+};
+
+const answerInterprete = (answer) => {
+  const res = answer.split("-");
+  return { questionId: res[0], selectedAnswer: res[1] };
 };
 
 const compareAnswers = (questionAnswer, userAnswer) => {
