@@ -15,9 +15,9 @@ const createTestResult = async (req, res) => {
 
     const result = foundQuestions.map((question, index) => {
       const questionId = question._id.toString();
-      const questionAnswer = question.answer;
-      const userAnswer = answers[index];
-      const isCorrect = questionAnswer === userAnswer;
+      const questionAnswer = sanitizeAnswer(question.answer);
+      const userAnswer = sanitizeAnswer(answers[index]);
+      const isCorrect = compareAnswers(questionAnswer, userAnswer);
       return { questionId, questionAnswer, userAnswer, isCorrect };
     });
 
@@ -30,13 +30,29 @@ const createTestResult = async (req, res) => {
     });
 
     await newTestResult.save();
-    // console.log(newTestResult);
 
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err);
     console.log(err);
   }
+};
+
+const sanitizeAnswer = (answer) => {
+  let sanitizedAnswer = answer.trim();
+
+  if (sanitizedAnswer.endsWith('.')) {
+    sanitizedAnswer = sanitizedAnswer.slice(0, -1);
+  }
+
+  return sanitizedAnswer;
+};
+
+const compareAnswers = (questionAnswer, userAnswer) => {
+  const sanitizedQuestionAnswer = sanitizeAnswer(questionAnswer);
+  const sanitizedUserAnswer = sanitizeAnswer(userAnswer);
+
+  return sanitizedQuestionAnswer === sanitizedUserAnswer;
 };
 
 module.exports = { createTestResult };
