@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const testResultSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  questionsId: { type: [String], required: true },
+  testId: { type: String, required: true },
+  result: { type: [Object], required: true },
   category: { type: String, enum: ['practice', 'final'], required: true },
   complexity: {
     type: String,

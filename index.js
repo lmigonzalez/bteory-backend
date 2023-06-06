@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const questionRouter = require('./routers/questionRouter');
 const testRouter = require('./routers/testRouter');
+const testResultRouter = require('./routers/testResultRouter');
 
 // mongoose
 //   .connect('mongodb://localhost:27017/', {
@@ -42,6 +43,7 @@ mongoose
 
 app.use('/api', questionRouter);
 app.use('/api', testRouter);
+app.use('/api', testResultRouter);
 
 app.listen(process.env.PORT || 3100, () => {
   console.log(`connected to port 3100`);
