@@ -1,9 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const helmet = require("helmet");
+const bodyParser = require("body-parser");
 const app = express();
 dotenv.config();
 
@@ -13,9 +13,9 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 
-const questionRouter = require('./routers/questionRouter');
-const testRouter = require('./routers/testRouter');
-const testResultRouter = require('./routers/testResultRouter');
+const questionRouter = require("./routers/questionRouter");
+const testRouter = require("./routers/testRouter");
+const testResultRouter = require("./routers/testResultRouter");
 
 // mongoose
 //   .connect('mongodb://localhost:27017/', {
@@ -35,16 +35,16 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.u2hl5.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
   )
   .then(() => {
-    console.log('connected to database');
+    console.log("connected to database");
   })
   .catch((err) => {
     console.log(err);
   });
 
-app.use('/api', questionRouter);
-app.use('/api', testRouter);
-app.use('/api', testResultRouter);
+app.use("/api", questionRouter);
+app.use("/api", testRouter);
+app.use("/api", testResultRouter);
 
-app.listen(process.env.PORT || 3100, () => {
-  console.log(`connected to port 3100`);
+app.listen(process.env.PORT || 8000, () => {
+  console.log(`connected to port 8000`);
 });

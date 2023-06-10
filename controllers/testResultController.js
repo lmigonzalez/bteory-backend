@@ -37,11 +37,7 @@ const createTestResult = async (req, res) => {
       complexity: test.complexity,
     });
 
-<<<<<<< HEAD
-    // console.log(result);
-=======
     console.log(result);
->>>>>>> refs/remotes/origin/main
 
     await newTestResult.save();
 
