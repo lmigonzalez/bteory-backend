@@ -3,6 +3,7 @@ const Test = require('../models/customTestModel');
 const Questions = require('../models/questionModel');
 
 const createTestResult = async (req, res) => {
+  console.log(req.body);
   const { testId, answers } = req.body;
   const userId = '1234567890';
 
@@ -29,7 +30,7 @@ const createTestResult = async (req, res) => {
       complexity: test.complexity,
     });
 
-	console.log(result)
+    // console.log(result);
 
     await newTestResult.save();
 
