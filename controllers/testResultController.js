@@ -1,11 +1,11 @@
-const TestResult = require('../models/testResultModel');
-const Test = require('../models/customTestModel');
-const Questions = require('../models/questionModel');
+const TestResult = require("../models/testResultModel");
+const Test = require("../models/customTestModel");
+const Questions = require("../models/questionModel");
 
 const createTestResult = async (req, res) => {
   console.log(req.body);
   const { testId, answers } = req.body;
-  const userId = '1234567890';
+  const userId = "1234567890";
 
   try {
     const test = await Test.findById(testId);
@@ -14,12 +14,19 @@ const createTestResult = async (req, res) => {
       _id: { $in: testQuestionIdArray },
     });
 
-    const result = foundQuestions.map((question, index) => {
-      const questionId = question._id.toString();
-      const questionAnswer = sanitizeAnswer(question.answer);
-      const userAnswer = sanitizeAnswer(answers[index]);
-      const isCorrect = compareAnswers(questionAnswer, userAnswer);
-      return { questionId, questionAnswer, userAnswer, isCorrect };
+    result = answers.map((item) => {
+      const { id, userAnswer } = PrepareAnswer(item);
+      const question = foundQuestions.find(
+        (question) => question._id.toString() === id
+      );
+      const isCorrect = userAnswer === question.answer;
+
+      return {
+        questionId: question._id,
+        questionAnswer: question.answer,
+        userAnswer: userAnswer,
+        isCorrect: isCorrect,
+      };
     });
 
     const newTestResult = new TestResult({
@@ -30,7 +37,11 @@ const createTestResult = async (req, res) => {
       complexity: test.complexity,
     });
 
+<<<<<<< HEAD
     // console.log(result);
+=======
+    console.log(result);
+>>>>>>> refs/remotes/origin/main
 
     await newTestResult.save();
 
@@ -41,10 +52,17 @@ const createTestResult = async (req, res) => {
   }
 };
 
+function PrepareAnswer(answer) {
+  return {
+    id: answer.split("-")[0],
+    userAnswer: answer.slice(answer.indexOf("-") + 1),
+  };
+}
+
 const sanitizeAnswer = (answer) => {
   let sanitizedAnswer = answer.trim();
 
-  if (sanitizedAnswer.endsWith('.')) {
+  if (sanitizedAnswer.endsWith(".")) {
     sanitizedAnswer = sanitizedAnswer.slice(0, -1);
   }
 
