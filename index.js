@@ -16,7 +16,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const questionRouter = require('./routers/questionRouter');
 const testRouter = require('./routers/testRouter');
 const testResultRouter = require('./routers/testResultRouter');
-const userRouter = require('./routers/usersRouter');
+const adminRouter = require('./routers/adminRouter');
+
+const userRouter = require('./routers/userRouter');
 
 // mongoose
 //   .connect('mongodb://localhost:27017/', {
@@ -45,6 +47,7 @@ mongoose
 app.use('/api', questionRouter);
 app.use('/api', testRouter);
 app.use('/api', testResultRouter);
+app.use('/api', adminRouter);
 app.use('/api', userRouter);
 
 app.listen(process.env.PORT || 8100, () => {
