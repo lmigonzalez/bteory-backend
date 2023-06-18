@@ -4,7 +4,7 @@ const clerk = require('@clerk/clerk-sdk-node');
 const checkIfAdmin = async (req, res) => {
   // const userId = req.headers.authorization.split(' ')[1];
 
-  const userId = 'user_2QcP6NqJunjkXoKnJ3Zv99i7dMJs';
+  const userId = 'user_2QcP6NqJunjkXoKnJ3Zv99i7dMJ';
   try {
     const admin = await adminModel.findOne({ userId });
     if (!admin) {

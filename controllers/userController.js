@@ -17,7 +17,15 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await clerk.users.getUserList();
     console.log(users);
-    res.status(200).json(users);
+
+    const newUser = users.map((item) => ({
+      _id: item.id,
+      firstName: item.firstName,
+      lastName: item.lastName,
+      email: item.emailAddresses[0].emailAddress,
+    }));
+
+    res.status(200).json(newUser);
   } catch (error) {
     console.log(error);
 
