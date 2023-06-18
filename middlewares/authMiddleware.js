@@ -2,9 +2,9 @@ const adminModel = require('../models/adminModel');
 const clerk = require('@clerk/clerk-sdk-node');
 
 const userExists = async (req, res, next) => {
-  // const userId = req.headers.authorization.split(' ')[1];
+  const userId = req.headers.authorization.split(' ')[1];
 
-  const userId = 'user_2QcP6NqJunjkXoKnJ3Zv99i7dMJ';
+  // const userId = 'user_2QcP6NqJunjkXoKnJ3Zv99i7dMJ';
 
   try {
     // const user = await adminModel.findById(userId);
