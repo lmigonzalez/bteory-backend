@@ -1,6 +1,21 @@
 const adminModel = require('../models/adminModel');
 const clerk = require('@clerk/clerk-sdk-node');
 
+const checkIfAdmin = async (req, res) => {
+  // const userId = req.headers.authorization.split(' ')[1];
+
+  const userId = 'user_2QcP6NqJunjkXoKnJ3Zv99i7dMJ';
+  try {
+    const admin = await adminModel.findOne({ userId });
+    if (!admin) {
+      return res.status(404).json(false);
+    }
+    res.status(200).json(true);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
 const createNewAdmin = async (req, res) => {
   const { email, level } = req.body;
 
@@ -68,4 +83,10 @@ const patchAdmin = async (req, res) => {
   }
 };
 
-module.exports = { createNewAdmin, getAdmins, deleteAdmin, patchAdmin };
+module.exports = {
+  checkIfAdmin,
+  createNewAdmin,
+  getAdmins,
+  deleteAdmin,
+  patchAdmin,
+};
